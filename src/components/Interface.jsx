@@ -2,6 +2,11 @@ import { ValidationError, useForm } from "@formspree/react";
 import { motion } from "framer-motion";
 import { useAtom } from "jotai";
 import { currentProjectAtom, projects } from "./Projects";
+import { ref, push } from "firebase/database";
+import { database } from "./firebase"; // Adjust the path as needed
+import { FaLinkedin, FaInstagram, FaEnvelope } from "react-icons/fa"; // Import icons from react-icons
+
+
 
 const Section = (props) => {
   const { children, mobileTop } = props;
@@ -53,7 +58,7 @@ const AboutSection = (props) => {
         <span className="bg-white px-1 italic">Pinak Tiwari</span>
       </h1>
       <motion.p
-        className="text-lg text-gray-600 mt-4"
+        className="text-lg text-gray-600 mt-4 max-w-2xl"
         initial={{
           opacity: 0,
           y: 25,
@@ -67,14 +72,28 @@ const AboutSection = (props) => {
           delay: 1.5,
         }}
       >
-        I am UI/UX developer & Analyst
-        <br />
-        
+        Hi, I'm Pinak Tiwari. I'm a Data Analyst, AI/ML enthusiast  
+  <br />
+  and Web/App Developer. Focused on solving real-world  
+  <br />
+  challenges with data and intelligent algorithms. 
+  <br />
+  Let’s connect and explore how we can collaborate!
       </motion.p>
+      <div className="flex space-x-4 mt-4">
+        <a href="www.linkedin.com/in/pinak-tiwari-8600922aa" target="_blank" rel="noopener noreferrer">
+          <FaLinkedin size={30} className="text-indigo-600 hover:text-indigo-800" />
+        </a>
+        <a href="pinakofficial44@gmail.com" target="_blank" rel="noopener noreferrer">
+          <FaEnvelope size={30} className="text-indigo-600 hover:text-indigo-800" />
+        </a>
+        <a href="https://www.instagram.com/pinak_12" target="_blank" rel="noopener noreferrer">
+          <FaInstagram size={30} className="text-indigo-600 hover:text-indigo-800" />
+        </a>
+      </div>
       <motion.button
         onClick={() => setSection(3)}
-        className={`bg-indigo-600 text-white py-4 px-8 
-      rounded-lg font-bold text-lg mt-4 md:mt-16`}
+        className="bg-indigo-600 text-white py-4 px-8 rounded-lg font-bold text-lg mt-4 md:mt-16"
         initial={{
           opacity: 0,
           y: 25,
@@ -94,27 +113,41 @@ const AboutSection = (props) => {
   );
 };
 
+
 const skills = [
   {
     title: "Nextjs",
-    level: 80,
+    level: 90,
   },
   {
     title: "React Native",
     level: 90,
   },
   {
-    title: "php",
+    title: "HTML-CSS",
     level: 90,
   },
   {
-    title: "javascript",
+    title: "JavaScript",
     level: 60,
   },
   {
-    title: "firebase",
-    level: 40,
+    title: "FireBase",
+    level: 80,
   },
+  {
+    title: "Power-BI",
+    level: 95,
+  },
+  {
+    title: "AI/ML",
+    level: 85,
+  },
+  {
+    title: "NODE.JS/EXPRESS.JS",
+    level: 60,
+  },
+  
 ];
 const languages = [
   {
@@ -122,13 +155,13 @@ const languages = [
     level: 100,
   },
   {
-    title: "javascript",
+    title: "JavaScript",
     level: 80,
   },
-  {
-    title: "java",
-    level: 20,
-  },
+  // {
+  //   title: "",
+  //   level: 20,
+  // },
 ];
 
 const SkillsSection = () => {
@@ -264,15 +297,40 @@ const ProjectsSection = () => {
 
 const ContactSection = () => {
   const [state, handleSubmit] = useForm("mayzgjbd");
+
+  // Handle Firebase submit logic
+  const handleFirebaseSubmit = async (e) => {
+    e.preventDefault();
+    const form = new FormData(e.target);
+
+    const data = {
+      name: form.get("name"),
+      email: form.get("email"),
+      message: form.get("message"),
+      timestamp: new Date().toISOString(),
+    };
+
+    // Send data to Firebase Realtime Database
+    try {
+      await push(ref(database, "contacts"), data);
+      console.log("Message submitted to Firebase");
+    } catch (error) {
+      console.error("Error submitting to Firebase:", error);
+    }
+
+    // Call Formspree submit after Firebase submit
+    handleSubmit(e);
+  };
+
   return (
     <Section>
       <h2 className="text-3xl md:text-5xl font-bold">Contact me</h2>
       <div className="mt-8 p-8 rounded-md bg-white bg-opacity-50 w-96 max-w-full">
         {state.succeeded ? (
-          <p className="text-gray-900 text-center">Thanks for your message !</p>
+          <p className="text-gray-900 text-center">Thanks for your message!</p>
         ) : (
-          <form onSubmit={handleSubmit}>
-            <label for="name" className="font-medium text-gray-900 block mb-1">
+          <form onSubmit={handleFirebaseSubmit}>
+            <label htmlFor="name" className="font-medium text-gray-900 block mb-1">
               Name
             </label>
             <input
@@ -281,10 +339,7 @@ const ContactSection = () => {
               id="name"
               className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 p-3"
             />
-            <label
-              for="email"
-              className="font-medium text-gray-900 block mb-1 mt-8"
-            >
+            <label htmlFor="email" className="font-medium text-gray-900 block mb-1 mt-8">
               Email
             </label>
             <input
@@ -299,10 +354,7 @@ const ContactSection = () => {
               field="email"
               errors={state.errors}
             />
-            <label
-              for="email"
-              className="font-medium text-gray-900 block mb-1 mt-8"
-            >
+            <label htmlFor="message" className="font-medium text-gray-900 block mb-1 mt-8">
               Message
             </label>
             <textarea
@@ -310,13 +362,10 @@ const ContactSection = () => {
               id="message"
               className="h-32 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 p-3"
             />
-            <ValidationError
-              className="mt-1 text-red-500"
-              errors={state.errors}
-            />
+            <ValidationError className="mt-1 text-red-500" errors={state.errors} />
             <button
               disabled={state.submitting}
-              className="bg-indigo-600 text-white py-4 px-8 rounded-lg font-bold text-lg mt-16 "
+              className="bg-indigo-600 text-white py-4 px-8 rounded-lg font-bold text-lg mt-16"
             >
               Submit
             </button>
