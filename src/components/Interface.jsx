@@ -58,28 +58,28 @@ const AboutSection = (props) => {
         <span className="bg-white px-1 italic">Pinak Tiwari</span>
       </h1>
       <motion.p
-        className="text-lg text-gray-600 mt-4 max-w-2xl"
-        initial={{
-          opacity: 0,
-          y: 25,
-        }}
-        whileInView={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 1,
-          delay: 1.5,
-        }}
-      >
-        Hi, I'm Pinak Tiwari. I'm a Data Analyst, AI/ML enthusiast  
+  className="text-lg text-black font-bold mt-4 max-w-2xl"
+  initial={{
+    opacity: 0,
+    y: 25,
+  }}
+  whileInView={{
+    opacity: 1,
+    y: 0,
+  }}
+  transition={{
+    duration: 1,
+    delay: 1.5,
+  }}
+>
+  Hi, I'm Pinak Tiwari. I'm a Data Analyst, AI/ML enthusiast  
   <br />
   and Web/App Developer. Focused on solving real-world  
   <br />
   challenges with data and intelligent algorithms. 
   <br />
   Let’s connect and explore how we can collaborate!
-      </motion.p>
+</motion.p>
       <div className="flex space-x-4 mt-4">
         <a href="www.linkedin.com/in/pinak-tiwari-8600922aa" target="_blank" rel="noopener noreferrer">
           <FaLinkedin size={30} className="text-indigo-600 hover:text-indigo-800" />
