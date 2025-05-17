@@ -124,11 +124,11 @@ const skills = [
     level: 90,
   },
   {
-    title: "HTML-CSS",
+    title: "HTML-CSS-JS",
     level: 90,
   },
   {
-    title: "JavaScript",
+    title: "Appwrite",
     level: 60,
   },
   {
@@ -144,7 +144,7 @@ const skills = [
     level: 85,
   },
   {
-    title: "NODE.JS/EXPRESS.JS",
+    title: "Streamlit",
     level: 60,
   },
   
